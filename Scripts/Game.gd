@@ -16,11 +16,11 @@ var save_version = 4
 # Game Stages (unlocked)
 var milestones= {
 	"game_started": false,
-	"counter_available": false,
-	"counter_bought": false,
-	"ten_counter1": false,
-	"ten_counter2": false,
-	"ten_counter3": false,
+	"counter1_available": false,
+	"counter1_bought": false,
+	"counter2_available": false,
+	"counter3_available": false,
+	"counter4_available": false,
 	"sacrifice_alpha_available": false,
 	"phishop_available": false,
 }
@@ -190,41 +190,42 @@ func calculate_phi():
 	# FUTURE adapt formula as a way to pace the game
 	return wallet.alpha.exponent - 14
 
-func unlock_milestones(onload = false):
-	if milestones.game_started and onload:
+# TODO refactor completly, this is bad
+func unlock_milestones(onload = false, ms = null):
+	if milestones.game_started or ms == "game_started":
 		emit_signal("milestone_passed", "game_started")
 	
-	if (wallet.alpha.isLargerThanOrEqualTo(10) and !milestones.counter_available) or (onload and milestones.counter_available):
-		emit_signal("milestone_passed", "counter_available")
-		if !milestones.counter_available:
-			milestones.counter_available = stats.time_since_start
+	if (onload and milestones.counter1_available) or ms == "counter1_available":
+		emit_signal("milestone_passed", "counter1_available")
+		if !milestones.counter1_available:
+			milestones.counter1_available = stats.time_since_start
 		
-	if (counters.Counter1.lvl >= 1 and !milestones.counter_bought) or (onload and milestones.counter_bought):
-		emit_signal("milestone_passed", "counter_bought")
-		if !milestones.counter_bought:
-			milestones.counter_bought = stats.time_since_start
+	if (counters.Counter1.lvl >= 1 and !milestones.counter1_bought) or (onload and milestones.counter1_bought):
+		emit_signal("milestone_passed", "counter1_bought")
+		if !milestones.counter1_bought:
+			milestones.counter1_bought = stats.time_since_start
 
-	if (counters.Counter1.lvl >= 10 and !milestones.ten_counter1) or (onload and milestones.ten_counter1):
-		emit_signal("milestone_passed", "ten_counter1")
-		if !milestones.ten_counter1:
-			milestones.ten_counter1 = stats.time_since_start
+	if (counters.Counter1.lvl >= 10 and !milestones.counter2_available) or (onload and milestones.counter2_available):
+		emit_signal("milestone_passed", "counter2_available")
+		if !milestones.counter2_available:
+			milestones.counter2_available = stats.time_since_start
 
-	if (counters.Counter2.lvl >= 10 and !milestones.ten_counter2) or (onload and milestones.ten_counter2):
-		emit_signal("milestone_passed", "ten_counter2")
-		if !milestones.ten_counter2:
-			milestones.ten_counter2 = stats.time_since_start
+	if (counters.Counter2.lvl >= 10 and !milestones.counter3_available) or (onload and milestones.counter3_available):
+		emit_signal("milestone_passed", "counter3_available")
+		if !milestones.counter3_available:
+			milestones.counter3_available = stats.time_since_start
 
-	if (counters.Counter3.lvl >= 10 and !milestones.ten_counter3) or (onload and milestones.ten_counter3):
-		emit_signal("milestone_passed", "ten_counter3")
-		if !milestones.ten_counter3:
-			milestones.ten_counter3 = stats.time_since_start
+	if (counters.Counter3.lvl >= 10 and !milestones.counter4_available) or (onload and milestones.counter4_available):
+		emit_signal("milestone_passed", "counter4_available")
+		if !milestones.counter4_available:
+			milestones.counter4_available = stats.time_since_start
 
 	if (counters.Counter4.lvl >= 20 and !milestones.sacrifice_alpha_available) or (onload and milestones.sacrifice_alpha_available):
 		emit_signal("milestone_passed", "sacrifice_alpha_available")
 		if !milestones.sacrifice_alpha_available:
 			milestones.sacrifice_alpha_available = stats.time_since_start
 	
-	if (wallet.phi.isLargerThanOrEqualTo(1) and !milestones.phishop_available) or (onload and milestones.phishop_available):
+	if (onload and milestones.phishop_available) or ms == "phishop_available":
 		emit_signal("milestone_passed", "phishop_available")
 		if !milestones.phishop_available:
 			milestones.phishop_available = stats.time_since_start
@@ -236,7 +237,7 @@ func _on_Number_pressed():
 	stats.number_clicked += 1
 	emit_signal("number_changed", [str(wallet["alpha"]), 0, float(wallet["alpha"].exponent) / 308])
 	if wallet.alpha.isLargerThanOrEqualTo(10):
-		unlock_milestones()
+		unlock_milestones(false, "counter1_available")
 
 
 func _on_BuyBtn_pressed(emitter):
@@ -250,7 +251,7 @@ func _on_UI_game_started():
 func _on_PhiSacrifice_pressed():
 	reset_alpha()
 	wallet.phi.add(calculate_phi())
-	unlock_milestones()
+		unlock_milestones(false, "phishop_available")
 
 
 ################
