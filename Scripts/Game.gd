@@ -188,8 +188,7 @@ func reset_alpha():
 
 func calculate_phi():
 	# FUTURE adapt formula as a way to pace the game
-	return wallet.alpha.mantissa - 14
-
+	return wallet.alpha.exponent - 14
 
 func unlock_milestones(onload = false):
 	if milestones.game_started and onload:
