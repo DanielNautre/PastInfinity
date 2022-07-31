@@ -25,14 +25,14 @@ var milestones= {
 }
 
 # moneys
-# TODO move wallet to a GO ??
+# TODO move wallet to a node ??
 var wallet = {
 	"alpha": Big.new(0),
 	"phi": Big.new(0)
 }
 
 # items
-# TODO move counters to a GO ??
+# TODO move counters to a node ??
 var counters = {
 	"Counter1": Counter.new("10", "1e3", "Counter2"),
 	"Counter2": Counter.new("100", "1e4", "Counter3"),
@@ -60,25 +60,7 @@ func _ready():
 	save_timer.start()
 
 
-func _input(event):
-	if event.is_action_pressed("save"):
-		save_game()
-	if event.is_action_pressed("load"):
-		load_game()
-	if event.is_action_pressed("quit_kill_save"):
-		var f = File.new()
-		if f.file_exists(savefile):
-			f.open(savefile, File.WRITE)
-			f.store_string('')
-			f.close()
-		get_tree().quit()
 
-
-	if !OS.is_debug_build():
-		return
-
-	if event.is_action_pressed("double_number"):
-		wallet["alpha"].multiply(1.5) 
 
 func _notification(what):
 	if what == MainLoop.NOTIFICATION_WM_QUIT_REQUEST:
@@ -221,7 +203,7 @@ func calculate_phi():
 
 func _on_BuyBtn_pressed(emitter):
 	buy_item(emitter)
-	
+
 func unlock_milestones(onload = false):
 	if milestones.game_started and onload:
 		emit_signal("milestone_passed", "game_started")
@@ -259,3 +241,40 @@ func unlock_milestones(onload = false):
 
 func _on_UI_game_started():
 	milestones.game_started = true
+
+
+################
+# DEBUG TOOLS
+################
+
+func _input(event):
+	if event.is_action_pressed("save"):
+		save_game()
+	if event.is_action_pressed("load"):
+		load_game()
+	if event.is_action_pressed("print_report"):
+		print_report()
+	if event.is_action_pressed("quit_kill_save"):
+		var f = File.new()
+		if f.file_exists(savefile):
+			f.open(savefile, File.WRITE)
+			f.store_string('')
+			f.close()
+		get_tree().quit()
+
+	if !OS.is_debug_build():
+		return
+
+	if event.is_action_pressed("double_number"):
+		wallet["alpha"].multiply(1.5) 
+
+
+func print_report():
+	print("WALLET CONTENT")
+	print(wallet)
+	print("\n--------------------\n")
+	print("MILESTONES")
+	print(milestones)
+	print("\n--------------------\n")
+	print("STATS")
+	print(stats)
