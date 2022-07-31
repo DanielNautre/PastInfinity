@@ -11,7 +11,7 @@ signal update_sacrifice_alpha_btn
 
 # TODO should saves be handled in a GO ?
 var savefile = "user://PastInfinity.save"
-var save_version = 3
+var save_version = 4
 
 # Game Stages (unlocked)
 var milestones= {
@@ -161,6 +161,7 @@ func save_game():
 	for item in counters:
 		array = counters[item].to_array()
 		f.store_var(array)
+	f.store_var(stats)
 	f.close()
 	
 func load_game():
@@ -183,7 +184,7 @@ func load_game():
 		for item in counters:
 			counter = f.get_var()
 			counters[item].from_array(counter)
-				
+		stats = f.get_var()		
 		f.close()
 
 
