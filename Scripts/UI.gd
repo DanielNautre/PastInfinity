@@ -32,13 +32,13 @@ func _on_Start_pressed():
 	$Intro.hide()
 	$MainView.show()
 
-#func _on_AlphaShopBtn_pressed():
-#	$MainView/PhiShop.hide()
-#	$MainView/AlphaShop.show()
-#
-#func _on_PhiShopBtn_pressed():
-#	$MainView/PhiShop.show()
-#	$MainView/AlphaShop.hide()
+func _on_AlphaShopBtn_pressed():
+	$MainView/Alpha/PhiShop.hide()
+	$MainView/Alpha/AlphaShop.show()
+
+func _on_PhiShopBtn_pressed():
+	$MainView/Alpha/PhiShop.show()
+	$MainView/Alpha/AlphaShop.hide()
 
 func _on_Game_number_changed(number):
 	find_node("NumberDisplay").text = numberFormat % number[0]
@@ -92,6 +92,9 @@ func _on_Game_milestone_passed(milestone):
 		return
 	if milestone == "sacrifice_alpha_available":
 		$MainView/Alpha/AlphaShop/PhiSacrifice.show()
+		return
+	if milestone == "phishop_available":
+		$MainView/Alpha/AlphaPhiButtons.show()
 		return
 
 

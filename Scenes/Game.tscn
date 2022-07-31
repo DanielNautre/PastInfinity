@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://Fonts/SmallTextFont.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Fonts/MenuButtonFont.tres" type="DynamicFont" id=2]
@@ -27,6 +27,14 @@ bg_color = Color( 0.184314, 0.184314, 0.184314, 1 )
 [sub_resource type="StyleBoxEmpty" id=11]
 
 [sub_resource type="StyleBoxEmpty" id=12]
+
+[sub_resource type="StyleBoxEmpty" id=14]
+content_margin_left = 50.0
+
+[sub_resource type="StyleBoxEmpty" id=15]
+content_margin_left = 50.0
+
+[sub_resource type="StyleBoxEmpty" id=13]
 
 [sub_resource type="StyleBoxEmpty" id=5]
 
@@ -145,6 +153,7 @@ custom_fonts/font = ExtResource( 1 )
 valign = 2
 
 [node name="AlphaShop" type="VBoxContainer" parent="MainView/Alpha"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 0.8
 size_flags_horizontal = 3
@@ -547,16 +556,35 @@ custom_styles/focus = SubResource( 12 )
 text = "Sacrifice for 0 φ"
 flat = true
 
-[node name="PhiShop" type="VBoxContainer" parent="MainView/Alpha"]
-visible = false
+[node name="PhiShop" type="TabContainer" parent="MainView/Alpha"]
 anchor_right = 1.0
-margin_bottom = 43.0
-
-[node name="NotUsed" type="Button" parent="MainView/Alpha/PhiShop"]
-margin_right = 720.0
-margin_bottom = 43.0
+anchor_bottom = 0.8
+margin_left = 20.0
+margin_right = -20.0
 custom_fonts/font = ExtResource( 1 )
-text = "Not Used"
+custom_styles/tab_fg = SubResource( 14 )
+custom_styles/tab_bg = SubResource( 15 )
+custom_styles/panel = SubResource( 13 )
+
+[node name="PhiPerks" type="GridContainer" parent="MainView/Alpha/PhiShop"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 49.0
+columns = 2
+
+[node name="AddFifthCounter" type="Button" parent="MainView/Alpha/PhiShop/PhiPerks"]
+margin_right = 251.0
+margin_bottom = 90.0
+rect_min_size = Vector2( 200, 90 )
+custom_fonts/font = ExtResource( 1 )
+text = "Add a Fifth Counter"
+flat = true
+
+[node name="PhiUnlocks" type="VBoxContainer" parent="MainView/Alpha/PhiShop"]
+visible = false
+margin_top = 24.0
+margin_right = 40.0
+margin_bottom = 40.0
 
 [node name="AlphaPhiButtons" type="HBoxContainer" parent="MainView/Alpha"]
 anchor_left = 0.5
