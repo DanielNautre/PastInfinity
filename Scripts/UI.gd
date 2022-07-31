@@ -70,24 +70,24 @@ func _on_Game_milestone_passed(milestone):
 		$Intro.hide()
 		$MainView.show()
 		return
-	if milestone == "counter_available":
+	if milestone == "counter1_available":
 		$MainView/Alpha/AlphaShop/Counter1.show()
 		return
-	if milestone == "counter_bought":
+	if milestone == "counter1_bought":
 		numberFormat = "%s α "
 		$MainView/Alpha/AlphaShop/Counter1/PriceLbl.show()
 		$MainView/Alpha/AlphaShop/Counter1/AmountLbl.show()
 		return
-	if milestone == "ten_counter1":
+	if milestone == "counter2_available":
 		$MainView/Alpha/AlphaShop/Counter2.show()
 		$MainView/Alpha/AlphaPB/NumberDisplay/NumberPerSecond.show()
 		$MainView/Alpha/AlphaShop/Counter1/Multiplier.show()
 		$MainView/Alpha/AlphaShop/Counter1/PerCentPerSecond.show()
 		return
-	if milestone == "ten_counter2":
+	if milestone == "counter3_available":
 		$MainView/Alpha/AlphaShop/Counter3.show()
 		return
-	if milestone == "ten_counter3":
+	if milestone == "counter4_available":
 		$MainView/Alpha/AlphaShop/Counter4.show()
 		return
 	if milestone == "sacrifice_alpha_available":
