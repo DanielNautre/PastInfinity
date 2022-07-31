@@ -283,51 +283,6 @@ func log10(x):
 	return log(x) * 0.4342944819032518
 
 
-static func setThousandName(name):
-	other.thousand_name = name
-	pass
-
-
-static func setThousandSeparator(separator):
-	other.thousand_separator = separator
-	pass
-
-
-static func setDecimalSeparator(separator):
-	other.decimal_separator = separator
-	pass
-
-
-static func setPostfixSeparator(separator):
-	other.postfix_separator = separator
-	pass
-
-
-static func setReadingSeparator(separator):
-	other.reading_separator = separator
-	pass
-
-
-static func setDynamicDecimals(d):
-	other.dynamic_decimals = bool(d)
-	pass
-
-
-static func setSmallDecimals(d):
-	other.small_decimals = int(d)
-	pass
-
-
-static func setThousandDecimals(d):
-	other.thousand_decimals = int(d)
-	pass
-
-
-static func setBigDecimals(d):
-	other.big_decimals = int(d)
-	pass
-
-
 func toString():
 	var mantissa_decimals = 0
 	if str(mantissa).find(".") >= 0:
@@ -413,23 +368,6 @@ func _latinPower(european_system):
 	return int(exponent / 3) - 1  # warning-ignore:integer_division
 
 
-func _latinPrefix(european_system):
-	var ones = _latinPower(european_system) % 10
-	var tens = int(_latinPower(european_system) / 10) % 10
-	var hundreds = int(_latinPower(european_system) / 100) % 10
-	var millias = int(_latinPower(european_system) / 1000) % 10
-
-	var prefix = ""
-	if _latinPower(european_system) < 10:
-		prefix = latin_special[ones] + other.reading_separator + latin_tens[tens] + other.reading_separator + latin_hundreds[hundreds]
-	else:
-		prefix = latin_hundreds[hundreds] + other.reading_separator + latin_ones[ones] + other.reading_separator + latin_tens[tens]
-
-	for _i in range(millias):
-		prefix = "millia" + other.reading_separator + prefix
-
-	return prefix.lstrip(other.reading_separator).rstrip(other.reading_separator)
-	
 # addgin my own because I want short name like s(extiollion), or O(ctillion)
 func _latinShortPrefix(european_system):
 	var ones = _latinPower(european_system) % 10
@@ -449,51 +387,6 @@ func _latinShortPrefix(european_system):
 
 	return prefix.lstrip(other.reading_separator).rstrip(other.reading_separator)
 
-
-func _tillionOrIllion(european_system):
-	if exponent < 6:
-		return ""
-	var powerKilo = _latinPower(european_system) % 1000
-	if powerKilo < 5 and powerKilo > 0 and _latinPower(european_system) < 1000:
-		return ""
-	if powerKilo >= 7 and powerKilo <= 10 or int(powerKilo / 10) % 10 == 1:
-		return "i"
-	return "ti"
-
-
-func _llionOrLliard(european_system):
-	if exponent < 6:
-		return ""
-	if int(exponent/3) % 2 == 1 and european_system:  # warning-ignore:integer_division
-		return "lliard"
-	return "llion"
-
-
-func getLongName(european_system = false, prefix=""):
-	if exponent < 6:
-		return ""
-	else:
-		return prefix + _latinPrefix(european_system) + other.reading_separator + _tillionOrIllion(european_system) + _llionOrLliard(european_system)
-
-
-func toAmericanName(no_decimals_on_small_values = false):
-	return toLongName(no_decimals_on_small_values, false)
-
-
-func toEuropeanName(no_decimals_on_small_values = false):
-	return toLongName(no_decimals_on_small_values, true)
-
-
-func toLongName(no_decimals_on_small_values = false, european_system = false):
-	if exponent < 6:
-		if exponent > 2:
-			return toPrefix(no_decimals_on_small_values) + other.postfix_separator + other.thousand_name
-		else:
-			return toPrefix(no_decimals_on_small_values)
-
-	var postfix = _latinPrefix(european_system) + other.reading_separator + _tillionOrIllion(european_system) + _llionOrLliard(european_system)
-
-	return toPrefix(no_decimals_on_small_values) + other.postfix_separator + postfix
 
 func _to_string():
 	return toShortName(true)
@@ -516,66 +409,3 @@ func toShortName(no_decimals_on_small_values = false, european_system = false):
 	return toPrefix(no_decimals_on_small_values) + other.postfix_separator + postfix
 
 
-func toMetricSymbol(no_decimals_on_small_values = false):
-	var target = int(exponent / 3)  # warning-ignore:integer_division
-
-	if not postfixes_metric_symbol.has(str(target)):
-		return toScientific()
-	else:
-		return toPrefix(no_decimals_on_small_values) + other.postfix_separator + postfixes_metric_symbol[str(target)]
-
-
-
-func toMetricName(no_decimals_on_small_values = false):
-	var target = int(exponent / 3)  # warning-ignore:integer_division
-
-	if not postfixes_metric_name.has(str(target)):
-		return toScientific()
-	else:
-		return toPrefix(no_decimals_on_small_values) + other.postfix_separator + postfixes_metric_name[str(target)]
-
-
-func toAA(no_decimals_on_small_values = false, use_thousand_symbol = true, force_decimals=false):
-	var target = int(exponent / 3)  # warning-ignore:integer_division
-	var postfix = ""
-
-	# This is quite slow for very big numbers, but we save the result for next similar target
-	if not postfixes_aa.has(str(target)):
-		var units = [0,0]
-		var m = 0
-		var u = 1
-		#print("UNIT " + str(target) + " NOT FOUND IN TABLE - GENERATING IT INSTEAD")
-		while (m < target-5):
-			m += 1
-			units[u] += 1
-			if units[u] == alphabet_aa.size():
-				var found = false
-				for i in range(units.size()-1,-1,-1):
-					if not found and units[i] < alphabet_aa.size()-1:
-						units[i] += 1
-						found = true
-				units[u] = 0
-				if not found:
-					units.append(0)
-					u += 1
-					for i in range(units.size()):
-						units[i] = 0
-
-		for i in range(units.size()):
-			postfix = postfix + str(alphabet_aa[units[i]])
-		postfixes_aa[str(target)] = postfix
-	else:
-		postfix = postfixes_aa[str(target)]
-
-	if not use_thousand_symbol and target == 1:
-		postfix = ""
-
-	var prefix = toPrefix(no_decimals_on_small_values, use_thousand_symbol, force_decimals)
-
-#    if remove_trailing_zeroes and other.decimal_separator in prefix:
-#        while prefix.ends_with("0"):
-#            prefix = prefix.rstrip("0")
-#        while prefix.ends_with(other.decimal_separator):
-#            prefix = prefix.rstrip(other.decimal_separator)
-
-	return prefix + other.postfix_separator + postfix
