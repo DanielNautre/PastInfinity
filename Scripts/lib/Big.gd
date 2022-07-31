@@ -29,7 +29,7 @@ const latin_short_tens = ["", "D", "vigin", "trigin", "quadragin", "quinquagin",
 const latin_short_hundreds = ["", "cen", "duocen", "trecen", "quadringen", "quingen", "sescen", "septingen", "octingen", "nongen"]
 const latin_short_special = ["", "M", "B", "T", "Qa", "Qt", "Sx", "Sp", "Oc", "No"]
 
-const other = {"dynamic_decimals":true, "small_decimals":2, "thousand_decimals":2, "big_decimals":2, "thousand_separator":".", "decimal_separator":",", "postfix_separator":"", "reading_separator":"", "thousand_name":"thousand"}
+const other = {"dynamic_decimals":true, "small_decimals":2, "thousand_decimals":2, "big_decimals":2, "thousand_separator":"", "decimal_separator":".", "postfix_separator":"", "reading_separator":"", "thousand_name":"k"}
 
 const MAX_MANTISSA = 1209600.0
 const MANTISSA_PRECISSION = 0.0000001
