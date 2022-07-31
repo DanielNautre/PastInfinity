@@ -70,19 +70,19 @@ func _notification(what):
 func _process(delta):
 	# Process number
 	# TODO find a more elegant way to do this
-	var AlphaPerSecond = counters["Counter1"].output()
+	var AlphaPerSecond = counters.Counter1.output()
 	var AlphaPerSecondTemp = AlphaPerSecond
-	var Counter1PerSecond = counters["Counter2"].output()
+	var Counter1PerSecond = counters.Counter2.output()
 	var Counter1PerSecondTemp = Counter1PerSecond
-	var Counter2PerSecond = counters["Counter3"].output()
+	var Counter2PerSecond = counters.Counter3.output()
 	var Counter2PerSecondTemp = Counter2PerSecond
-	var Counter3PerSecond = counters["Counter4"].output()
+	var Counter3PerSecond = counters.Counter4.output()
 	var Counter3PerSecondTemp = Counter3PerSecond
 	
 	wallet["alpha"].plus(AlphaPerSecondTemp.multiply(delta)) 
-	counters["Counter1"].add_qty(Counter1PerSecondTemp.multiply(delta))
-	counters["Counter2"].add_qty(Counter2PerSecondTemp.multiply(delta))
-	counters["Counter3"].add_qty(Counter3PerSecondTemp.multiply(delta))
+	counters.Counter1.add_qty(Counter1PerSecondTemp.multiply(delta))
+	counters.Counter2.add_qty(Counter2PerSecondTemp.multiply(delta))
+	counters.Counter3.add_qty(Counter3PerSecondTemp.multiply(delta))
 
 	# Process UI changes
 	emit_signal("number_changed", [str(wallet.alpha), str(counters.Counter1.output()), float(wallet.alpha.exponent) / 308])
