@@ -84,8 +84,6 @@ func _process(delta):
 	counters["Counter2"].add_qty(Counter2PerSecondTemp.multiply(delta))
 	counters["Counter3"].add_qty(Counter3PerSecondTemp.multiply(delta))
 
-	unlock_milestones()
-
 	# Process UI changes
 	emit_signal("number_changed", [str(wallet.alpha), str(counters.Counter1.output()), float(wallet.alpha.exponent) / 308])
 	
@@ -115,6 +113,7 @@ func buy_item(item, qty = 1):
 
 		update_button(item)
 		emit_signal("update_PB", [item, counters[item].lvl % 10])
+		unlock_milestones()
 
 
 func update_button(item):
