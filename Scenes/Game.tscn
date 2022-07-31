@@ -48,8 +48,12 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource( 4 )
 
-[node name="Game" type="Node2D" parent="."]
+[node name="Game" type="Node" parent="."]
 script = ExtResource( 6 )
+
+[node name="Timer" type="Timer" parent="Game"]
+wait_time = 25.0
+autostart = true
 
 [node name="Intro" type="Control" parent="."]
 visible = false
@@ -690,6 +694,7 @@ flat = true
 [connection signal="time_passed" from="Game" to="." method="_on_Game_time_passed"]
 [connection signal="update_PB" from="Game" to="." method="_on_Game_update_PB"]
 [connection signal="update_sacrifice_alpha_btn" from="Game" to="." method="_on_Game_update_sacrifice_alpha_btn"]
+[connection signal="timeout" from="Game/Timer" to="Game" method="save_game"]
 [connection signal="pressed" from="Intro/Start" to="." method="_on_Start_pressed"]
 [connection signal="pressed" from="MainView/Alpha/AlphaPB/NumberDisplay" to="Game" method="_on_Number_pressed"]
 [connection signal="pressed" from="MainView/Alpha/AlphaShop/Counter1/BuyBtn" to="Game" method="_on_BuyBtn_pressed" binds= [ "Counter1" ]]

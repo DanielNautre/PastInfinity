@@ -1,4 +1,4 @@
-extends Node2D
+extends Node
 
 const Counter = preload("res://Scripts/lib/Counter.gd")
 
@@ -52,13 +52,6 @@ func _ready():
 	Big.setThousandName("K")
 	load_game()
 	unlock_milestones(true)
-	
-	var save_timer = Timer.new()
-	save_timer.set_wait_time(25.0)
-	save_timer.set_one_shot(false)
-	save_timer.connect("timeout", self, "save_game")
-	add_child(save_timer)
-	save_timer.start()
 
 
 func _notification(what):
