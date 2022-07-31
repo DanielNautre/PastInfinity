@@ -60,12 +60,11 @@ func _ready():
 	save_timer.start()
 
 
-
-
 func _notification(what):
 	if what == MainLoop.NOTIFICATION_WM_QUIT_REQUEST:
 		save_game()
 		get_tree().quit() # default behavior
+
 
 func _process(delta):
 	# Process number
@@ -105,12 +104,6 @@ func _process(delta):
 			emit_signal("time_passed", stats.time_since_start)
 
 
-func _on_Number_pressed():
-	wallet["alpha"].plus(1)
-	stats.number_clicked += 1
-	emit_signal("number_changed", [str(wallet["alpha"]), 0, float(wallet["alpha"].exponent) / 308])
-
-
 func buy_item(item, qty = 1):
 	var currency = counters[item]["currency"]
 	var price = counters[item].price()
@@ -148,7 +141,8 @@ func update_button(item):
 			"percent": percent
 	}
 	emit_signal("button_update", signal_content)
-	
+
+
 func save_game():
 	var f = File.new()
 	f.open(savefile, File.WRITE)
@@ -163,7 +157,8 @@ func save_game():
 		f.store_var(array)
 	f.store_var(stats)
 	f.close()
-	
+
+
 func load_game():
 	var f = File.new()
 	if f.file_exists(savefile):
@@ -202,9 +197,6 @@ func calculate_phi():
 	return wallet.alpha.mantissa - 14
 
 
-func _on_BuyBtn_pressed(emitter):
-	buy_item(emitter)
-
 func unlock_milestones(onload = false):
 	if milestones.game_started and onload:
 		emit_signal("milestone_passed", "game_started")
@@ -238,6 +230,18 @@ func unlock_milestones(onload = false):
 		emit_signal("milestone_passed", "sacrifice_alpha_available")
 		if !milestones.sacrifice_alpha_available:
 			milestones.sacrifice_alpha_available = stats.time_since_start
+### SIGNALS ###
+
+func _on_Number_pressed():
+	wallet.alpha.plus(1)
+	stats.number_clicked += 1
+	emit_signal("number_changed", [str(wallet["alpha"]), 0, float(wallet["alpha"].exponent) / 308])
+	if wallet.alpha.isLargerThanOrEqualTo(10):
+		unlock_milestones()
+
+
+func _on_BuyBtn_pressed(emitter):
+	buy_item(emitter)
 
 
 func _on_UI_game_started():
@@ -262,10 +266,6 @@ func _input(event):
 			f.store_string('')
 			f.close()
 		get_tree().quit()
-
-	if !OS.is_debug_build():
-		return
-
 	if event.is_action_pressed("double_number"):
 		wallet["alpha"].multiply(1.5) 
 
