@@ -21,7 +21,8 @@ var milestones= {
 	"ten_counter1": false,
 	"ten_counter2": false,
 	"ten_counter3": false,
-	"sacrifice_alpha_available": false
+	"sacrifice_alpha_available": false,
+	"phishop_available": false,
 }
 
 # moneys
@@ -116,12 +117,6 @@ func buy_item(item, qty = 1):
 		emit_signal("update_PB", [item, counters[item].lvl % 10])
 
 
-func reset_alpha():
-	wallet["alpha"].set(0)
-	for item in counters:
-		counters[item].reset()
-
-
 func update_button(item):
 	var provider = counters[item].provider
 	var qty = counters[item].qty
@@ -183,15 +178,15 @@ func load_game():
 		f.close()
 
 
-#func _on_PhiSacrifice_pressed():
-#	reset_alpha()
-#	update_buttons()
-#	var PBvalues = {
-#		"CounterBuy" : 0,
-#		"CounterEffBuy" : 0}
-#	emit_signal("update_PB", PBvalues)
-#	emit_signal("number_changed", [wallet["alpha"], 0])
-#
+func reset_alpha():
+	wallet.alpha.set(0)
+	emit_signal("number_changed", [str(wallet.alpha), 0, float(wallet.alpha.exponent) / 308])
+
+	for item in counters:
+		counters[item].reset()
+		update_button(item)
+
+
 func calculate_phi():
 	# FUTURE adapt formula as a way to pace the game
 	return wallet.alpha.mantissa - 14
@@ -230,6 +225,12 @@ func unlock_milestones(onload = false):
 		emit_signal("milestone_passed", "sacrifice_alpha_available")
 		if !milestones.sacrifice_alpha_available:
 			milestones.sacrifice_alpha_available = stats.time_since_start
+	
+	if (wallet.phi.isLargerThanOrEqualTo(1) and !milestones.phishop_available) or (onload and milestones.phishop_available):
+		emit_signal("milestone_passed", "phishop_available")
+		if !milestones.phishop_available:
+			milestones.phishop_available = stats.time_since_start
+
 ### SIGNALS ###
 
 func _on_Number_pressed():
@@ -246,6 +247,12 @@ func _on_BuyBtn_pressed(emitter):
 
 func _on_UI_game_started():
 	milestones.game_started = true
+
+
+func _on_PhiSacrifice_pressed():
+	reset_alpha()
+	wallet.phi.add(calculate_phi())
+	unlock_milestones()
 
 
 ################
