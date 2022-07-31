@@ -409,3 +409,5 @@ func toShortName(no_decimals_on_small_values = false, european_system = false):
 	return toPrefix(no_decimals_on_small_values) + other.postfix_separator + postfix
 
 
+func to_dict():
+	return {"mantissa": mantissa, "exponent": exponent}
