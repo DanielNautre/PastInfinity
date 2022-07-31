@@ -16,7 +16,7 @@ func _enter_tree():
 	$MainView/Alpha/AlphaShop/Counter4.hide()
 	$MainView/Alpha/AlphaShop/PhiSacrifice.hide()
 	$MainView/Alpha/AlphaPhiButtons.hide()
-	$MainView/AlphaPB/NumberDisplay/NumberPerSecond.hide()
+	$MainView/Alpha/AlphaPB/NumberDisplay/NumberPerSecond.hide()
 	# 1st Counter elements
 	$MainView/Alpha/AlphaShop/Counter1/AmountLbl.hide()
 	$MainView/Alpha/AlphaShop/Counter1/PerCentPerSecond.hide()
@@ -42,7 +42,7 @@ func _on_Start_pressed():
 
 func _on_Game_number_changed(number):
 	find_node("NumberDisplay").text = numberFormat % number[0]
-	$MainView/AlphaPB/NumberDisplay/NumberPerSecond.text = "%s/s" % number[1]
+	$MainView/Alpha/AlphaPB/NumberDisplay/NumberPerSecond.text = "%s/s" % number[1]
 	if number[2] > 0.1: # only display progress once passed 10%
 		find_node("AlphaPB").value = number[2]
 
@@ -80,7 +80,7 @@ func _on_Game_milestone_passed(milestone):
 		return
 	if milestone == "ten_counter1":
 		$MainView/Alpha/AlphaShop/Counter2.show()
-		$MainView/AlphaPB/NumberDisplay/NumberPerSecond.show()
+		$MainView/Alpha/AlphaPB/NumberDisplay/NumberPerSecond.show()
 		$MainView/Alpha/AlphaShop/Counter1/Multiplier.show()
 		$MainView/Alpha/AlphaShop/Counter1/PerCentPerSecond.show()
 		return

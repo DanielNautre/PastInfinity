@@ -104,19 +104,27 @@ margin_right = 100.0
 margin_bottom = 25.0
 custom_fonts/font = ExtResource( 7 )
 
-[node name="AlphaPB" type="ProgressBar" parent="MainView"]
-anchor_top = 0.039
+[node name="Alpha" type="Control" parent="MainView"]
+anchor_top = 0.156
 anchor_right = 1.0
-anchor_bottom = 0.117
-margin_top = 0.079998
-margin_bottom = 20.24
+anchor_bottom = 0.859
+margin_top = 0.319992
+margin_bottom = 0.47998
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="AlphaPB" type="ProgressBar" parent="MainView/Alpha"]
+anchor_top = -0.167
+anchor_right = 1.0
+anchor_bottom = -0.04
+margin_top = 0.300003
 custom_styles/fg = SubResource( 8 )
 custom_styles/bg = SubResource( 9 )
 max_value = 1.0
 step = 0.001
 percent_visible = false
 
-[node name="NumberDisplay" type="Button" parent="MainView/AlphaPB"]
+[node name="NumberDisplay" type="Button" parent="MainView/Alpha/AlphaPB"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 20.0
@@ -128,22 +136,13 @@ text = "0   "
 flat = true
 align = 2
 
-[node name="NumberPerSecond" type="Label" parent="MainView/AlphaPB/NumberDisplay"]
+[node name="NumberPerSecond" type="Label" parent="MainView/Alpha/AlphaPB/NumberDisplay"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_right = -430.0
 rect_min_size = Vector2( 250, 110 )
 custom_fonts/font = ExtResource( 1 )
 valign = 2
-
-[node name="Alpha" type="Control" parent="MainView"]
-anchor_top = 0.156
-anchor_right = 1.0
-anchor_bottom = 0.859
-margin_top = 0.319992
-margin_bottom = 0.47998
-size_flags_horizontal = 3
-size_flags_vertical = 3
 
 [node name="AlphaShop" type="VBoxContainer" parent="MainView/Alpha"]
 anchor_right = 1.0
@@ -664,7 +663,7 @@ flat = true
 [connection signal="update_PB" from="Game" to="." method="_on_Game_update_PB"]
 [connection signal="update_sacrifice_alpha_btn" from="Game" to="." method="_on_Game_update_sacrifice_alpha_btn"]
 [connection signal="pressed" from="Intro/Start" to="." method="_on_Start_pressed"]
-[connection signal="pressed" from="MainView/AlphaPB/NumberDisplay" to="Game" method="_on_Number_pressed"]
+[connection signal="pressed" from="MainView/Alpha/AlphaPB/NumberDisplay" to="Game" method="_on_Number_pressed"]
 [connection signal="pressed" from="MainView/Alpha/AlphaShop/Counter1/BuyBtn" to="Game" method="_on_BuyBtn_pressed" binds= [ "Counter1" ]]
 [connection signal="pressed" from="MainView/Alpha/AlphaShop/Counter2/BuyBtn" to="Game" method="_on_BuyBtn_pressed" binds= [ "Counter2" ]]
 [connection signal="pressed" from="MainView/Alpha/AlphaShop/Counter3/BuyBtn" to="Game" method="_on_BuyBtn_pressed" binds= [ "Counter3" ]]
