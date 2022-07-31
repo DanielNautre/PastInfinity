@@ -260,6 +260,9 @@ func _on_PhiSacrifice_pressed():
 ################
 
 func _input(event):
+	if !OS.is_debug_build():
+		return
+
 	if event.is_action_pressed("save"):
 		save_game()
 	if event.is_action_pressed("load"):
