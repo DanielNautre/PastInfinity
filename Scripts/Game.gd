@@ -8,10 +8,11 @@ signal button_update
 signal milestone_passed
 signal time_passed
 signal update_sacrifice_alpha_btn
+signal phi_changed
 
 # TODO should saves be handled in a GO ?
 var savefile = "user://PastInfinity.save"
-var save_version = 4
+var save_version = 0
 
 # Game Stages (unlocked)
 var milestones= {
@@ -38,26 +39,38 @@ var counters = {
 	"Counter1": Counter.new("10", "1e3", "Counter2"),
 	"Counter2": Counter.new("100", "1e4", "Counter3"),
 	"Counter3": Counter.new("1e4", "1e5", "Counter4"),
-	"Counter4": Counter.new("1e6", "1e6"),
+	"Counter4": Counter.new("1e6", "1e6", "Counter5"),
+	"Counter5": Counter.new("1e9", "1e8", "Counter6"),
+	"Counter6": Counter.new("1e13", "1e18"),
+}
+
+var phi_items = {
+	"fifth_counter": false
 }
 
 var stats = {
 	"time_since_start": 0,
-	"number_clicked": 0
+	"number_clicked": 0,
+	"alpha_spent": Big.new(0),
+	"phi_spent": Big.new(0),
+}
+
+var achievements = {
+	"why": false
 }
 
 
 func _ready():
-	Big.setThousandSeparator("")
-	Big.setThousandName("K")
+	# try to load the previous save
 	load_game()
 	unlock_milestones(true)
 
 
 func _notification(what):
+	# save the game on quit
 	if what == MainLoop.NOTIFICATION_WM_QUIT_REQUEST:
 		save_game()
-		get_tree().quit() # default behavior
+		get_tree().quit()
 
 
 func _process(delta):
@@ -72,7 +85,7 @@ func _process(delta):
 	var Counter3PerSecond = counters.Counter4.output()
 	var Counter3PerSecondTemp = Counter3PerSecond
 	
-	wallet["alpha"].plus(AlphaPerSecondTemp.multiply(delta)) 
+	wallet.alpha.plus(AlphaPerSecondTemp.multiply(delta)) 
 	counters.Counter1.add_qty(Counter1PerSecondTemp.multiply(delta))
 	counters.Counter2.add_qty(Counter2PerSecondTemp.multiply(delta))
 	counters.Counter3.add_qty(Counter3PerSecondTemp.multiply(delta))
@@ -96,16 +109,14 @@ func _process(delta):
 			emit_signal("time_passed", stats.time_since_start)
 
 
-func buy_item(item, qty = 1):
-	var currency = counters[item]["currency"]
+func buy_counter(item, qty = 1):
 	var price = counters[item].price()
 
-	if wallet[currency].isLargerThanOrEqualTo(price):
-		wallet[currency].minus(price)
+	if wallet.alpha.isLargerThanOrEqualTo(price):
+		wallet.alpha.minus(price)
 		counters[item].add_lvl(qty)
 
 		update_button(item)
-		emit_signal("update_PB", [item, counters[item].lvl % 10])
 		unlock_milestones()
 
 
@@ -128,6 +139,7 @@ func update_button(item):
 			"percent": percent
 	}
 	emit_signal("button_update", signal_content)
+	emit_signal("update_PB", [item, counters[item].lvl % 10])
 
 
 func save_game():
@@ -173,6 +185,7 @@ func load_game():
 func reset_alpha():
 	wallet.alpha.set(0)
 	emit_signal("number_changed", [str(wallet.alpha), 0, float(wallet.alpha.exponent) / 308])
+	emit_signal("update_sacrifice_alpha_btn", 0) # after alpha reset phi to gain is 0
 
 	for item in counters:
 		counters[item].reset()
@@ -228,13 +241,11 @@ func unlock_milestones(onload = false, ms = null):
 func _on_Number_pressed():
 	wallet.alpha.plus(1)
 	stats.number_clicked += 1
-	emit_signal("number_changed", [str(wallet["alpha"]), 0, float(wallet["alpha"].exponent) / 308])
+	emit_signal("number_changed", [str(wallet.alpha), 0, float(wallet.alpha.exponent) / 308])
 	if wallet.alpha.isLargerThanOrEqualTo(10):
 		unlock_milestones(false, "counter1_available")
-
-
-func _on_BuyBtn_pressed(emitter):
-	buy_item(emitter)
+	if stats.number_clicked > 100:
+		achievements.why = stats.time_since_start
 
 
 func _on_UI_game_started():
@@ -242,9 +253,13 @@ func _on_UI_game_started():
 
 
 func _on_PhiSacrifice_pressed():
-	reset_alpha()
-	wallet.phi.add(calculate_phi())
+	var phi = calculate_phi()
+	print(phi)
+	if phi > 0:
+		reset_alpha()
+		wallet.phi.plus(phi)
 		unlock_milestones(false, "phishop_available")
+		emit_signal("phi_changed", str(wallet.phi))
 
 
 ################
@@ -269,7 +284,7 @@ func _input(event):
 			f.close()
 		get_tree().quit()
 	if event.is_action_pressed("double_number"):
-		wallet["alpha"].multiply(1.5) 
+		wallet.alpha.multiply(1.5) 
 
 
 func print_report():

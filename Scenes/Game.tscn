@@ -1,12 +1,28 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=36 format=2]
 
-[ext_resource path="res://Fonts/SmallTextFont.tres" type="DynamicFont" id=1]
-[ext_resource path="res://Fonts/MenuButtonFont.tres" type="DynamicFont" id=2]
-[ext_resource path="res://Fonts/TitleFont.tres" type="DynamicFont" id=3]
-[ext_resource path="res://Scripts/UI.gd" type="Script" id=4]
-[ext_resource path="res://Fonts/NumberFont.tres" type="DynamicFont" id=5]
-[ext_resource path="res://Scripts/Game.gd" type="Script" id=6]
-[ext_resource path="res://Fonts/VerySmallTextFont.tres" type="DynamicFont" id=7]
+[ext_resource path="res://Fonts/NotoReg26.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Fonts/NotoReg48.tres" type="DynamicFont" id=2]
+[ext_resource path="res://Fonts/NotoReg75.tres" type="DynamicFont" id=3]
+[ext_resource path="res://Scripts/Main.gd" type="Script" id=4]
+[ext_resource path="res://Fonts/NotoReg20.tres" type="DynamicFont" id=5]
+[ext_resource path="res://Scripts/Player.gd" type="Script" id=6]
+[ext_resource path="res://Fonts/NotoReg36.tres" type="DynamicFont" id=7]
+[ext_resource path="res://Scripts/Controller.gd" type="Script" id=8]
+[ext_resource path="res://Scripts/AlphaView.gd" type="Script" id=9]
+[ext_resource path="res://Ressources/alpha.tres" type="Resource" id=10]
+[ext_resource path="res://Scenes/Counters.gd" type="Script" id=11]
+[ext_resource path="res://Ressources/Counters/Counter4.tres" type="Resource" id=12]
+[ext_resource path="res://Ressources/Counters/Counter1.tres" type="Resource" id=13]
+[ext_resource path="res://Ressources/Counters/Counter5.tres" type="Resource" id=14]
+[ext_resource path="res://Ressources/Counters/Counter6.tres" type="Resource" id=15]
+[ext_resource path="res://Ressources/Counters/Counter2.tres" type="Resource" id=16]
+[ext_resource path="res://Ressources/Counters/Counter3.tres" type="Resource" id=17]
+[ext_resource path="res://Ressources/phi.tres" type="Resource" id=18]
+[ext_resource path="res://Scripts/PhiItems.gd" type="Script" id=19]
+[ext_resource path="res://Scenes/Milestones.gd" type="Script" id=20]
+[ext_resource path="res://Ressources/Themes/TabBtnSelected.tres" type="Theme" id=21]
+[ext_resource path="res://Ressources/Themes/ItemBtnUnavailable.tres" type="Theme" id=22]
+[ext_resource path="res://Scripts/PhiShopView.gd" type="Script" id=23]
 
 [sub_resource type="StyleBoxEmpty" id=7]
 
@@ -28,19 +44,14 @@ bg_color = Color( 0.184314, 0.184314, 0.184314, 1 )
 
 [sub_resource type="StyleBoxEmpty" id=12]
 
-[sub_resource type="StyleBoxEmpty" id=14]
-content_margin_left = 50.0
-
-[sub_resource type="StyleBoxEmpty" id=15]
-content_margin_left = 50.0
-
-[sub_resource type="StyleBoxEmpty" id=13]
+[sub_resource type="StyleBoxFlat" id=13]
+bg_color = Color( 0.0823529, 0.0823529, 0.0823529, 1 )
 
 [sub_resource type="StyleBoxEmpty" id=5]
 
 [sub_resource type="StyleBoxEmpty" id=6]
 
-[node name="UI" type="Control"]
+[node name="Main" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_min_size = Vector2( 720, 1280 )
@@ -48,11 +59,36 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource( 4 )
 
-[node name="Game" type="Node" parent="."]
-script = ExtResource( 6 )
+[node name="GameController" type="Node" parent="."]
+script = ExtResource( 8 )
 
-[node name="Timer" type="Timer" parent="Game"]
+[node name="Player" type="Node" parent="GameController" groups=["Persist"]]
+unique_name_in_owner = true
+script = ExtResource( 6 )
+alpha = ExtResource( 10 )
+phi = ExtResource( 18 )
+
+[node name="Counters" type="Node" parent="GameController/Player" groups=["Persist"]]
+script = ExtResource( 11 )
+Counter1 = ExtResource( 13 )
+Counter2 = ExtResource( 16 )
+Counter3 = ExtResource( 17 )
+Counter4 = ExtResource( 12 )
+Counter5 = ExtResource( 14 )
+Counter6 = ExtResource( 15 )
+
+[node name="PhiItems" type="Node" parent="GameController/Player" groups=["Persist"]]
+script = ExtResource( 19 )
+
+[node name="Milestones" type="Node" parent="GameController/Player" groups=["Persist"]]
+script = ExtResource( 20 )
+
+[node name="SaveGame" type="Timer" parent="GameController"]
 wait_time = 25.0
+autostart = true
+
+[node name="SaveProgressReport" type="Timer" parent="GameController"]
+wait_time = 180.0
 autostart = true
 
 [node name="Intro" type="Control" parent="."]
@@ -114,16 +150,17 @@ size_flags_vertical = 3
 [node name="TimeElapsed" type="Label" parent="MainView"]
 margin_right = 100.0
 margin_bottom = 25.0
-custom_fonts/font = ExtResource( 7 )
+custom_fonts/font = ExtResource( 5 )
 
 [node name="Alpha" type="Control" parent="MainView"]
 anchor_top = 0.156
 anchor_right = 1.0
-anchor_bottom = 0.859
+anchor_bottom = 0.911
 margin_top = 0.319992
-margin_bottom = 0.47998
 size_flags_horizontal = 3
 size_flags_vertical = 3
+script = ExtResource( 9 )
+alpha = ExtResource( 10 )
 
 [node name="AlphaPB" type="ProgressBar" parent="MainView/Alpha"]
 anchor_top = -0.167
@@ -142,7 +179,7 @@ anchor_bottom = 1.0
 margin_left = 20.0
 margin_right = -20.0
 size_flags_horizontal = 3
-custom_fonts/font = ExtResource( 5 )
+custom_fonts/font = ExtResource( 3 )
 custom_styles/focus = SubResource( 3 )
 text = "0   "
 flat = true
@@ -251,7 +288,7 @@ anchor_bottom = 1.0
 margin_left = 25.0
 margin_top = 65.0
 margin_right = 100.0
-custom_fonts/font = ExtResource( 7 )
+custom_fonts/font = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": true
 }
@@ -347,7 +384,7 @@ anchor_bottom = 1.0
 margin_left = 25.0
 margin_top = 65.0
 margin_right = 100.0
-custom_fonts/font = ExtResource( 7 )
+custom_fonts/font = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": true
 }
@@ -443,7 +480,7 @@ anchor_bottom = 1.0
 margin_left = 25.0
 margin_top = 65.0
 margin_right = 100.0
-custom_fonts/font = ExtResource( 7 )
+custom_fonts/font = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": true
 }
@@ -539,56 +576,614 @@ anchor_bottom = 1.0
 margin_left = 25.0
 margin_top = 65.0
 margin_right = 100.0
-custom_fonts/font = ExtResource( 7 )
+custom_fonts/font = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Counter5" type="ProgressBar" parent="MainView/Alpha/AlphaShop"]
+margin_top = 416.0
+margin_right = 720.0
+margin_bottom = 516.0
+rect_min_size = Vector2( 0, 100 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_styles/fg = SubResource( 1 )
+custom_styles/bg = SubResource( 10 )
+max_value = 10.0
+step = 1.0
+allow_greater = true
+percent_visible = false
+
+[node name="BuyBtn" type="Button" parent="MainView/Alpha/AlphaShop/Counter5"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 0, 60 )
+custom_fonts/font = ExtResource( 1 )
+custom_styles/focus = SubResource( 4 )
+flat = true
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Label" type="Label" parent="MainView/Alpha/AlphaShop/Counter5"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -85.0
+margin_right = 85.0
+margin_bottom = 65.0
+custom_fonts/font = ExtResource( 1 )
+text = "5th Counter"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="AmountLbl" type="Label" parent="MainView/Alpha/AlphaShop/Counter5"]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_left = 30.0
+margin_top = -30.0
+margin_right = 90.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 60, 60 )
+custom_fonts/font = ExtResource( 1 )
+text = "0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="PriceLbl" type="Label" parent="MainView/Alpha/AlphaShop/Counter5"]
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = -220.0
+margin_top = -40.0
+margin_right = -70.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 150, 60 )
+custom_fonts/font = ExtResource( 1 )
+align = 2
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Multiplier" type="Label" parent="MainView/Alpha/AlphaShop/Counter5"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -60.0
+margin_top = -50.0
+margin_right = 50.0
+margin_bottom = -5.0
+custom_fonts/font = ExtResource( 1 )
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="PerCentPerSecond" type="Label" parent="MainView/Alpha/AlphaShop/Counter5"]
+anchor_bottom = 1.0
+margin_left = 25.0
+margin_top = 65.0
+margin_right = 100.0
+custom_fonts/font = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Counter6" type="ProgressBar" parent="MainView/Alpha/AlphaShop"]
+margin_top = 520.0
+margin_right = 720.0
+margin_bottom = 620.0
+rect_min_size = Vector2( 0, 100 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_styles/fg = SubResource( 1 )
+custom_styles/bg = SubResource( 10 )
+max_value = 10.0
+step = 1.0
+allow_greater = true
+percent_visible = false
+
+[node name="BuyBtn" type="Button" parent="MainView/Alpha/AlphaShop/Counter6"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 0, 60 )
+custom_fonts/font = ExtResource( 1 )
+custom_styles/focus = SubResource( 4 )
+flat = true
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Label" type="Label" parent="MainView/Alpha/AlphaShop/Counter6"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -85.0
+margin_right = 85.0
+margin_bottom = 65.0
+custom_fonts/font = ExtResource( 1 )
+text = "6th Counter"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="AmountLbl" type="Label" parent="MainView/Alpha/AlphaShop/Counter6"]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_left = 30.0
+margin_top = -30.0
+margin_right = 90.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 60, 60 )
+custom_fonts/font = ExtResource( 1 )
+text = "0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="PriceLbl" type="Label" parent="MainView/Alpha/AlphaShop/Counter6"]
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = -220.0
+margin_top = -40.0
+margin_right = -70.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 150, 60 )
+custom_fonts/font = ExtResource( 1 )
+align = 2
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Multiplier" type="Label" parent="MainView/Alpha/AlphaShop/Counter6"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -60.0
+margin_top = -50.0
+margin_right = 50.0
+margin_bottom = -5.0
+custom_fonts/font = ExtResource( 1 )
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="PerCentPerSecond" type="Label" parent="MainView/Alpha/AlphaShop/Counter6"]
+anchor_bottom = 1.0
+margin_left = 25.0
+margin_top = 65.0
+margin_right = 100.0
+custom_fonts/font = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": true
 }
 
 [node name="Spacer" type="ColorRect" parent="MainView/Alpha/AlphaShop"]
-margin_top = 416.0
+margin_top = 624.0
 margin_right = 720.0
-margin_bottom = 416.0
+margin_bottom = 624.0
 size_flags_vertical = 2
 
 [node name="PhiSacrifice" type="Button" parent="MainView/Alpha/AlphaShop"]
-margin_top = 640.0
+margin_top = 692.0
 margin_right = 720.0
-margin_bottom = 720.0
+margin_bottom = 772.0
 rect_min_size = Vector2( 400, 80 )
 custom_fonts/font = ExtResource( 2 )
 custom_styles/focus = SubResource( 12 )
 text = "Sacrifice for 0 φ"
 flat = true
 
-[node name="PhiShop" type="TabContainer" parent="MainView/Alpha"]
+[node name="PhiShop" type="Control" parent="MainView/Alpha"]
 anchor_right = 1.0
-anchor_bottom = 0.8
+anchor_bottom = 0.862
 margin_left = 20.0
 margin_right = -20.0
-custom_fonts/font = ExtResource( 1 )
-custom_styles/tab_fg = SubResource( 14 )
-custom_styles/tab_bg = SubResource( 15 )
-custom_styles/panel = SubResource( 13 )
+script = ExtResource( 23 )
+phi = ExtResource( 18 )
 
-[node name="PhiPerks" type="GridContainer" parent="MainView/Alpha/PhiShop"]
+[node name="PhiShopTabs" type="HBoxContainer" parent="MainView/Alpha/PhiShop"]
+anchor_right = 1.0
+anchor_bottom = 0.103
+margin_bottom = 0.0925903
+
+[node name="PhiPerks" type="Button" parent="MainView/Alpha/PhiShop/PhiShopTabs"]
+margin_right = 338.0
+margin_bottom = 85.0
+size_flags_horizontal = 3
+theme = ExtResource( 21 )
+custom_fonts/font = ExtResource( 2 )
+text = "Perks"
+
+[node name="PhiUnlocks" type="Button" parent="MainView/Alpha/PhiShop/PhiShopTabs"]
+margin_left = 342.0
+margin_right = 680.0
+margin_bottom = 85.0
+size_flags_horizontal = 3
+theme = ExtResource( 21 )
+custom_fonts/font = ExtResource( 2 )
+text = "Unlocks"
+
+[node name="PhiPerks" type="Control" parent="MainView/Alpha/PhiShop"]
+anchor_top = 0.103
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = 49.0
-columns = 2
 
-[node name="AddFifthCounter" type="Button" parent="MainView/Alpha/PhiShop/PhiPerks"]
-margin_right = 251.0
-margin_bottom = 90.0
-rect_min_size = Vector2( 200, 90 )
+[node name="Phi" type="Label" parent="MainView/Alpha/PhiShop/PhiPerks"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -240.0
+margin_right = 240.0
+margin_bottom = 80.0
+custom_fonts/font = ExtResource( 2 )
+text = "0 φ"
+align = 2
+valign = 1
+
+[node name="FlowContainer" type="HFlowContainer" parent="MainView/Alpha/PhiShop/PhiPerks"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 90.0
+margin_bottom = 0.313782
+custom_constants/vseparation = 10
+custom_constants/hseparation = 10
+
+[node name="AddFifthCounter" type="Button" parent="MainView/Alpha/PhiShop/PhiPerks/FlowContainer"]
+margin_right = 335.0
+margin_bottom = 125.0
+rect_min_size = Vector2( 250, 125 )
+size_flags_horizontal = 3
+theme = ExtResource( 22 )
+custom_fonts/font = ExtResource( 1 )
+disabled = true
+
+[node name="Price" type="Label" parent="MainView/Alpha/PhiShop/PhiPerks/FlowContainer/AddFifthCounter"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -50.0
+margin_top = -40.0
+margin_right = 50.0
+custom_fonts/font = ExtResource( 1 )
+text = "1 φ"
+align = 1
+valign = 1
+
+[node name="Name" type="Label" parent="MainView/Alpha/PhiShop/PhiPerks/FlowContainer/AddFifthCounter"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -150.0
+margin_top = 10.0
+margin_right = 150.0
 custom_fonts/font = ExtResource( 1 )
 text = "Add a Fifth Counter"
-flat = true
+align = 1
+valign = 1
 
-[node name="PhiUnlocks" type="VBoxContainer" parent="MainView/Alpha/PhiShop"]
+[node name="AddSixthCounter" type="Button" parent="MainView/Alpha/PhiShop/PhiPerks/FlowContainer"]
+margin_left = 345.0
+margin_right = 680.0
+margin_bottom = 125.0
+rect_min_size = Vector2( 250, 125 )
+size_flags_horizontal = 3
+theme = ExtResource( 22 )
+custom_fonts/font = ExtResource( 1 )
+disabled = true
+
+[node name="Price" type="Label" parent="MainView/Alpha/PhiShop/PhiPerks/FlowContainer/AddSixthCounter"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -50.0
+margin_top = -40.0
+margin_right = 50.0
+custom_fonts/font = ExtResource( 1 )
+text = "5 φ"
+align = 1
+valign = 1
+
+[node name="Name" type="Label" parent="MainView/Alpha/PhiShop/PhiPerks/FlowContainer/AddSixthCounter"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -150.0
+margin_top = 10.0
+margin_right = 150.0
+custom_fonts/font = ExtResource( 1 )
+text = "Add a Sixth Counter"
+align = 1
+valign = 1
+
+[node name="ImproveSpeed" type="Button" parent="MainView/Alpha/PhiShop/PhiPerks/FlowContainer"]
+margin_top = 135.0
+margin_right = 335.0
+margin_bottom = 260.0
+rect_min_size = Vector2( 250, 125 )
+size_flags_horizontal = 3
+theme = ExtResource( 22 )
+custom_fonts/font = ExtResource( 1 )
+disabled = true
+
+[node name="Price" type="Label" parent="MainView/Alpha/PhiShop/PhiPerks/FlowContainer/ImproveSpeed"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -50.0
+margin_top = -40.0
+margin_right = 50.0
+custom_fonts/font = ExtResource( 1 )
+text = "15 φ"
+align = 1
+valign = 1
+
+[node name="Name" type="Label" parent="MainView/Alpha/PhiShop/PhiPerks/FlowContainer/ImproveSpeed"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -150.0
+margin_top = 10.0
+margin_right = 150.0
+custom_fonts/font = ExtResource( 1 )
+text = "All counters are faster"
+align = 1
+valign = 1
+
+[node name="BetterSixthCounter" type="Button" parent="MainView/Alpha/PhiShop/PhiPerks/FlowContainer"]
+margin_left = 345.0
+margin_top = 135.0
+margin_right = 680.0
+margin_bottom = 260.0
+rect_min_size = Vector2( 250, 125 )
+size_flags_horizontal = 3
+theme = ExtResource( 22 )
+custom_fonts/font = ExtResource( 1 )
+disabled = true
+
+[node name="Price" type="Label" parent="MainView/Alpha/PhiShop/PhiPerks/FlowContainer/BetterSixthCounter"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -50.0
+margin_top = -40.0
+margin_right = 50.0
+custom_fonts/font = ExtResource( 1 )
+text = "30 φ"
+align = 1
+valign = 1
+
+[node name="Name" type="Label" parent="MainView/Alpha/PhiShop/PhiPerks/FlowContainer/BetterSixthCounter"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -150.0
+margin_top = 10.0
+margin_right = 150.0
+custom_constants/line_spacing = -12
+custom_fonts/font = ExtResource( 1 )
+text = "6th Counter scales with α  sacrificed"
+align = 1
+valign = 1
+autowrap = true
+
+[node name="PhiUnlocks" type="ScrollContainer" parent="MainView/Alpha/PhiShop"]
 visible = false
-margin_top = 24.0
-margin_right = 40.0
-margin_bottom = 40.0
+anchor_top = 0.115
+anchor_right = 1.0
+anchor_bottom = 1.0
+scroll_horizontal_enabled = false
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainView/Alpha/PhiShop/PhiUnlocks"]
+margin_right = 680.0
+margin_bottom = 736.993
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 6
+
+[node name="SpentPhi" type="Panel" parent="MainView/Alpha/PhiShop/PhiUnlocks/VBoxContainer"]
+margin_right = 680.0
+margin_bottom = 110.0
+rect_min_size = Vector2( 0, 110 )
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 13 )
+
+[node name="NameLbl" type="Label" parent="MainView/Alpha/PhiShop/PhiUnlocks/VBoxContainer/SpentPhi"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -240.0
+margin_top = 5.0
+margin_right = 240.0
+rect_min_size = Vector2( 0, 80 )
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 7 )
+text = "0 φ spent in total"
+align = 1
+valign = 1
+
+[node name="Item1" type="Panel" parent="MainView/Alpha/PhiShop/PhiUnlocks/VBoxContainer"]
+margin_top = 116.0
+margin_right = 680.0
+margin_bottom = 226.0
+rect_min_size = Vector2( 0, 110 )
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 13 )
+
+[node name="NameLbl" type="Label" parent="MainView/Alpha/PhiShop/PhiUnlocks/VBoxContainer/Item1"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -240.0
+margin_top = 5.0
+margin_right = 240.0
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 1 )
+text = "1st Counter scales faster"
+align = 1
+valign = 1
+
+[node name="ConditionLbl" type="Label" parent="MainView/Alpha/PhiShop/PhiUnlocks/VBoxContainer/Item1"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -220.0
+margin_top = -70.0
+margin_right = 220.0
+margin_bottom = -5.0
+custom_fonts/font = ExtResource( 5 )
+text = "Unlocked by spending a total of 1 φ"
+align = 1
+valign = 1
+
+[node name="Item2" type="Panel" parent="MainView/Alpha/PhiShop/PhiUnlocks/VBoxContainer"]
+margin_top = 232.0
+margin_right = 680.0
+margin_bottom = 342.0
+rect_min_size = Vector2( 0, 110 )
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 13 )
+
+[node name="NameLbl" type="Label" parent="MainView/Alpha/PhiShop/PhiUnlocks/VBoxContainer/Item2"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -240.0
+margin_top = 5.0
+margin_right = 240.0
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 1 )
+text = "2nd Counter scales faster"
+align = 1
+valign = 1
+
+[node name="ConditionLbl" type="Label" parent="MainView/Alpha/PhiShop/PhiUnlocks/VBoxContainer/Item2"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -220.0
+margin_top = -70.0
+margin_right = 220.0
+margin_bottom = -5.0
+custom_fonts/font = ExtResource( 5 )
+text = "Unlocked by spending a total of 10 φ"
+align = 1
+valign = 1
+
+[node name="Item3" type="Panel" parent="MainView/Alpha/PhiShop/PhiUnlocks/VBoxContainer"]
+margin_top = 348.0
+margin_right = 680.0
+margin_bottom = 458.0
+rect_min_size = Vector2( 0, 110 )
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 13 )
+
+[node name="NameLbl" type="Label" parent="MainView/Alpha/PhiShop/PhiUnlocks/VBoxContainer/Item3"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -240.0
+margin_top = 5.0
+margin_right = 240.0
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 1 )
+text = "1st Counter scales even faster"
+align = 1
+valign = 1
+
+[node name="ConditionLbl" type="Label" parent="MainView/Alpha/PhiShop/PhiUnlocks/VBoxContainer/Item3"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -220.0
+margin_top = -70.0
+margin_right = 220.0
+margin_bottom = -5.0
+custom_fonts/font = ExtResource( 5 )
+text = "Unlocked by spending a total of 20 φ"
+align = 1
+valign = 1
+
+[node name="Item4" type="Panel" parent="MainView/Alpha/PhiShop/PhiUnlocks/VBoxContainer"]
+margin_top = 348.0
+margin_right = 680.0
+margin_bottom = 458.0
+rect_min_size = Vector2( 0, 110 )
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 13 )
+
+[node name="NameLbl" type="Label" parent="MainView/Alpha/PhiShop/PhiUnlocks/VBoxContainer/Item4"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -240.0
+margin_top = 5.0
+margin_right = 240.0
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 1 )
+text = "3rd Counter scales faster"
+align = 1
+valign = 1
+
+[node name="ConditionLbl" type="Label" parent="MainView/Alpha/PhiShop/PhiUnlocks/VBoxContainer/Item4"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -220.0
+margin_top = -70.0
+margin_right = 220.0
+margin_bottom = -5.0
+custom_fonts/font = ExtResource( 5 )
+text = "Unlocked by spending a total of 50 φ"
+align = 1
+valign = 1
+
+[node name="Item5" type="Panel" parent="MainView/Alpha/PhiShop/PhiUnlocks/VBoxContainer"]
+margin_top = 348.0
+margin_right = 680.0
+margin_bottom = 458.0
+rect_min_size = Vector2( 0, 110 )
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 13 )
+
+[node name="NameLbl" type="Label" parent="MainView/Alpha/PhiShop/PhiUnlocks/VBoxContainer/Item5"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -240.0
+margin_top = 5.0
+margin_right = 240.0
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 1 )
+text = "4th Counter scales faster"
+align = 1
+valign = 1
+
+[node name="ConditionLbl" type="Label" parent="MainView/Alpha/PhiShop/PhiUnlocks/VBoxContainer/Item5"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -220.0
+margin_top = -70.0
+margin_right = 220.0
+margin_bottom = -5.0
+custom_fonts/font = ExtResource( 5 )
+text = "Unlocked by spending a total of 80 φ"
+align = 1
+valign = 1
 
 [node name="AlphaPhiButtons" type="HBoxContainer" parent="MainView/Alpha"]
 anchor_left = 0.5
@@ -605,7 +1200,7 @@ margin_right = 308.0
 margin_bottom = 75.0
 rect_min_size = Vector2( 150, 75 )
 size_flags_horizontal = 3
-custom_fonts/font = ExtResource( 1 )
+custom_fonts/font = ExtResource( 7 )
 custom_styles/focus = SubResource( 5 )
 text = "α shop"
 flat = true
@@ -616,20 +1211,19 @@ margin_right = 620.0
 margin_bottom = 75.0
 rect_min_size = Vector2( 150, 75 )
 size_flags_horizontal = 3
-custom_fonts/font = ExtResource( 1 )
+custom_fonts/font = ExtResource( 7 )
 custom_styles/focus = SubResource( 5 )
 text = "φ shop"
 flat = true
 
 [node name="BottomBar" type="HBoxContainer" parent="MainView"]
-anchor_left = 0.014
 anchor_top = 0.906
-anchor_right = 0.986
-anchor_bottom = 0.992
-margin_left = -0.0799999
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 10.0
 margin_top = 0.319946
-margin_right = 0.0799561
-margin_bottom = 0.23999
+margin_right = -10.0001
+margin_bottom = -10.0
 rect_min_size = Vector2( 700, 0 )
 size_flags_horizontal = 3
 
@@ -687,20 +1281,45 @@ custom_styles/focus = SubResource( 6 )
 text = "ℸ "
 flat = true
 
-[connection signal="game_started" from="." to="Game" method="_on_UI_game_started"]
-[connection signal="button_update" from="Game" to="." method="_on_Game_button_update"]
-[connection signal="milestone_passed" from="Game" to="." method="_on_Game_milestone_passed"]
-[connection signal="number_changed" from="Game" to="." method="_on_Game_number_changed"]
-[connection signal="time_passed" from="Game" to="." method="_on_Game_time_passed"]
-[connection signal="update_PB" from="Game" to="." method="_on_Game_update_PB"]
-[connection signal="update_sacrifice_alpha_btn" from="Game" to="." method="_on_Game_update_sacrifice_alpha_btn"]
-[connection signal="timeout" from="Game/Timer" to="Game" method="save_game"]
-[connection signal="pressed" from="Intro/Start" to="." method="_on_Start_pressed"]
-[connection signal="pressed" from="MainView/Alpha/AlphaPB/NumberDisplay" to="Game" method="_on_Number_pressed"]
-[connection signal="pressed" from="MainView/Alpha/AlphaShop/Counter1/BuyBtn" to="Game" method="_on_BuyBtn_pressed" binds= [ "Counter1" ]]
-[connection signal="pressed" from="MainView/Alpha/AlphaShop/Counter2/BuyBtn" to="Game" method="_on_BuyBtn_pressed" binds= [ "Counter2" ]]
-[connection signal="pressed" from="MainView/Alpha/AlphaShop/Counter3/BuyBtn" to="Game" method="_on_BuyBtn_pressed" binds= [ "Counter3" ]]
-[connection signal="pressed" from="MainView/Alpha/AlphaShop/Counter4/BuyBtn" to="Game" method="_on_BuyBtn_pressed" binds= [ "Counter4" ]]
-[connection signal="pressed" from="MainView/Alpha/AlphaShop/PhiSacrifice" to="Game" method="_on_PhiSacrifice_pressed"]
-[connection signal="pressed" from="MainView/Alpha/AlphaPhiButtons/AlphaShopBtn" to="." method="_on_AlphaShopBtn_pressed"]
-[connection signal="pressed" from="MainView/Alpha/AlphaPhiButtons/PhiShopBtn" to="." method="_on_PhiShopBtn_pressed"]
+[connection signal="load_intro" from="GameController" to="." method="_load_intro"]
+[connection signal="update_phi_sacrifice" from="GameController" to="MainView/Alpha" method="_on_update_phi_sacrifice"]
+[connection signal="update_speed" from="GameController" to="MainView/Alpha" method="_on_update_speed"]
+[connection signal="update_PB" from="GameController/Player/Counters" to="MainView/Alpha" method="update_PB"]
+[connection signal="update_counter_buttons" from="GameController/Player/Counters" to="MainView/Alpha" method="update_counter_buttons"]
+[connection signal="lock_phi_item" from="GameController/Player/PhiItems" to="MainView/Alpha/PhiShop" method="_on_PhiItems_lock_phi_item"]
+[connection signal="show_phi_spent" from="GameController/Player/PhiItems" to="MainView/Alpha/PhiShop" method="_on_PhiItems_show_phi_spent"]
+[connection signal="speed_improvement" from="GameController/Player/PhiItems" to="MainView/Alpha" method="_on_speed_improvement"]
+[connection signal="unlock_phi_item" from="GameController/Player/PhiItems" to="MainView/Alpha/PhiShop" method="_on_PhiItems_unlock_phi_item"]
+[connection signal="counter_1_available" from="GameController/Player/Milestones" to="MainView/Alpha" method="_on_counter_1_available"]
+[connection signal="counter_1_bought" from="GameController/Player/Milestones" to="GameController/Player" method="_on_Milestones_counter_1_bought"]
+[connection signal="counter_1_bought" from="GameController/Player/Milestones" to="MainView/Alpha" method="_on_counter_1_bought"]
+[connection signal="counter_2_available" from="GameController/Player/Milestones" to="MainView/Alpha" method="_on_counter_2_available"]
+[connection signal="counter_3_available" from="GameController/Player/Milestones" to="MainView/Alpha" method="_on_counter_3_available"]
+[connection signal="counter_4_available" from="GameController/Player/Milestones" to="MainView/Alpha" method="_on_counter_4_available"]
+[connection signal="counter_5_available" from="GameController/Player/Milestones" to="MainView/Alpha" method="_on_counter_5_available"]
+[connection signal="counter_6_available" from="GameController/Player/Milestones" to="MainView/Alpha" method="_on_counter_6_available"]
+[connection signal="first_phi_unlock" from="GameController/Player/Milestones" to="MainView/Alpha/PhiShop" method="_on_Milestones_first_phi_unlock"]
+[connection signal="fourth_phi_unlock" from="GameController/Player/Milestones" to="MainView/Alpha/PhiShop" method="_on_Milestones_fourth_phi_unlock"]
+[connection signal="improved_counter_6" from="GameController/Player/Milestones" to="MainView/Alpha" method="_on_Milestones_improved_counter_6"]
+[connection signal="phishop_available" from="GameController/Player/Milestones" to="MainView/Alpha" method="_on_phishop_available"]
+[connection signal="sacrifice_alpha_available" from="GameController/Player/Milestones" to="MainView/Alpha" method="_on_sacrifice_alpha_available"]
+[connection signal="second_phi_unlock" from="GameController/Player/Milestones" to="MainView/Alpha/PhiShop" method="_on_Milestones_second_phi_unlock"]
+[connection signal="timeout" from="GameController/SaveGame" to="GameController" method="save_game"]
+[connection signal="timeout" from="GameController/SaveProgressReport" to="GameController" method="_on_SaveProgressReport_timeout"]
+[connection signal="pressed" from="Intro/Start" to="." method="_start_game_pressed"]
+[connection signal="pressed" from="MainView/Alpha/AlphaPB/NumberDisplay" to="GameController" method="_on_Number_pressed"]
+[connection signal="pressed" from="MainView/Alpha/AlphaShop/Counter1/BuyBtn" to="GameController/Player/Counters" method="buy_counter" binds= [ "Counter1" ]]
+[connection signal="pressed" from="MainView/Alpha/AlphaShop/Counter2/BuyBtn" to="GameController/Player/Counters" method="buy_counter" binds= [ "Counter2" ]]
+[connection signal="pressed" from="MainView/Alpha/AlphaShop/Counter3/BuyBtn" to="GameController/Player/Counters" method="buy_counter" binds= [ "Counter3" ]]
+[connection signal="pressed" from="MainView/Alpha/AlphaShop/Counter4/BuyBtn" to="GameController/Player/Counters" method="buy_counter" binds= [ "Counter4" ]]
+[connection signal="pressed" from="MainView/Alpha/AlphaShop/Counter5/BuyBtn" to="GameController/Player/Counters" method="buy_counter" binds= [ "Counter5" ]]
+[connection signal="pressed" from="MainView/Alpha/AlphaShop/Counter6/BuyBtn" to="GameController/Player/Counters" method="buy_counter" binds= [ "Counter6" ]]
+[connection signal="pressed" from="MainView/Alpha/AlphaShop/PhiSacrifice" to="GameController" method="_on_PhiSacrifice_pressed"]
+[connection signal="pressed" from="MainView/Alpha/PhiShop/PhiShopTabs/PhiPerks" to="MainView/Alpha" method="_on_PhiPerks_pressed"]
+[connection signal="pressed" from="MainView/Alpha/PhiShop/PhiShopTabs/PhiUnlocks" to="MainView/Alpha" method="_on_PhiUnlocks_pressed"]
+[connection signal="pressed" from="MainView/Alpha/PhiShop/PhiPerks/FlowContainer/AddFifthCounter" to="GameController/Player/PhiItems" method="_on_AddFifthCounter_pressed"]
+[connection signal="pressed" from="MainView/Alpha/PhiShop/PhiPerks/FlowContainer/AddSixthCounter" to="GameController/Player/PhiItems" method="_on_AddSixthCounter_pressed"]
+[connection signal="pressed" from="MainView/Alpha/PhiShop/PhiPerks/FlowContainer/ImproveSpeed" to="GameController/Player/PhiItems" method="_on_ImproveSpeed_pressed"]
+[connection signal="pressed" from="MainView/Alpha/PhiShop/PhiPerks/FlowContainer/BetterSixthCounter" to="GameController/Player/PhiItems" method="_on_BetterSixthCounter_pressed"]
+[connection signal="pressed" from="MainView/Alpha/AlphaPhiButtons/AlphaShopBtn" to="MainView/Alpha" method="_on_AlphaShopBtn_pressed"]
+[connection signal="pressed" from="MainView/Alpha/AlphaPhiButtons/PhiShopBtn" to="MainView/Alpha" method="_on_PhiShopBtn_pressed"]

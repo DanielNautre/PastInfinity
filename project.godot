@@ -9,19 +9,31 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "Reference",
+"base": "Big",
+"class": "Alpha",
+"language": "GDScript",
+"path": "res://Scripts/lib/Alpha.gd"
+}, {
+"base": "Resource",
 "class": "Big",
 "language": "GDScript",
 "path": "res://Scripts/lib/Big.gd"
 }, {
-"base": "Reference",
+"base": "Resource",
 "class": "Counter",
 "language": "GDScript",
 "path": "res://Scripts/lib/Counter.gd"
+}, {
+"base": "Big",
+"class": "Phi",
+"language": "GDScript",
+"path": "res://Scripts/lib/Phi.gd"
 } ]
 _global_script_class_icons={
+"Alpha": "",
 "Big": "",
-"Counter": ""
+"Counter": "",
+"Phi": ""
 }
 
 [application]
@@ -76,6 +88,10 @@ print_report={
  ]
 }
 
+[logging]
+
+file_logging/enable_file_logging=true
+
 [physics]
 
 common/enable_pause_aware_picking=true
@@ -83,5 +99,5 @@ common/enable_pause_aware_picking=true
 [rendering]
 
 2d/snapping/use_gpu_pixel_snap=true
-environment/default_clear_color=Color( 0.121569, 0.121569, 0.121569, 1 )
+environment/default_clear_color=Color( 0.0823529, 0.0823529, 0.0823529, 1 )
 environment/default_environment="res://default_env.tres"
